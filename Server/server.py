@@ -24,15 +24,11 @@ class Log(Resource):
 def upload_file():
     
     if request.method == 'POST':
-        #print(request.files)
-        if 'file' not in request.files:
-            return "oops"
-        file = request.files['file']
-        file_name = file.filename
-        file_content = file.read()
+        filename = request.args["filename"]
+        filedata = request.data
         file_full_path = UPLOAD_FOLDER + request.remote_addr + "\\"
         Path(file_full_path).mkdir(parents=True, exist_ok=True)
-        open(file_full_path + file_name, 'wb').write(file_content)
+        open(file_full_path + filename, 'wb').write(filedata)
         return "gotit"
             
 

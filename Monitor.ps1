@@ -93,7 +93,7 @@ function Start-Mon {
             Send-Log -LogString "Hmm seems like no handles found"
         }
         Send-Data -Paths $paths_to_send
-    Start-Sleep -Seconds $TIMER_CONST
+        Start-Sleep -Seconds $TIMER_CONST
     } 
 
     
