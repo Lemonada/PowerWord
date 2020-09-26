@@ -123,7 +123,7 @@ function ConvertTo-HandleHashTable
 
     $sourceProcessHandle = [IntPtr]::Zero
     $handleDuplicate = [IntPtr]::Zero
-    $sourceProcessHandle = [Kernel32]::OpenProcess(0x40, $true, $HandleEntry.OwnerProcessId)
+    $sourceProcessHandle = [Kernel32]::OpenProcess(0x0040, $true, $HandleEntry.OwnerProcessId)
 
     if (-not [Kernel32]::DuplicateHandle($sourceProcessHandle, [IntPtr]$HandleEntry.Handle, (Get-Process -Id $Pid).Handle, [ref]$handleDuplicate, 0, $false, 2))
     {
@@ -141,6 +141,11 @@ function ConvertTo-HandleHashTable
     }
     $Path = [System.Runtime.InteropServices.Marshal]::PtrToStringUni([IntPtr]([long]$ptr+ 2 * [IntPtr]::Size))
 
+    $handleDuplicateClose = [IntPtr]::Zero
+    [Kernel32]::DuplicateHandle((Get-Process -Id $PID).Handle, $handleDuplicate, 0, [ref]$handleDuplicateClose, 0, $false, 1) | Out-Null
+
+    
+    [NtDll]::NtQueryObject($handleDuplicate, [OBJECT_INFORMATION_CLASS]::ObjectNameInformation, [IntPtr]::Zero, 0, [ref]$length) | Out-Null
     [System.Runtime.InteropServices.Marshal]::FreeHGlobal($ptr)
     [PSCustomObject]@{
         Path=(ConvertTo-RegularFileName $Path);
@@ -217,5 +222,3 @@ function Get-FileHandle-Monit-Script
     }
     
 }
-
-Get-FileHandle-Monit-Script -ProcId 5244

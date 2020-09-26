@@ -42,7 +42,6 @@ function Compare-HashTable{
         $paths
     )
     $paths_to_send = New-Object System.Collections.Generic.List[System.Object]
-
     $paths_to_send += Get-Closed-Handels -paths $paths
     Foreach ($path in $paths)
     {
